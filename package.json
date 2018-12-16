@@ -2,10 +2,14 @@
   "name": "styled-grids",
   "version": "1.0.0",
   "description": "Styled Component Grids using Styled-System",
-  "main": "index.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
   "scripts": {
-    "build": "babel src -d dist",
-    "watch": "babel src -d dist -w",
+    "build:cjs": "babel src/index.js -o dist/index.cjs.js",
+    "watch:cjs": "babel src/index.js -o dist/index.cjs.js -w",
+    "build:esm": "ESM=true babel src/index.js -o dist/index.esm.js",
+    "watch:esm": "ESM=true babel src/index.js -o dist/index.esm.js -w",
+    "build": "yarn build:cjs && yarn build:esm",
     "test": "jest"
   },
   "repository": "git@github.com:WebSeed/styled-grids.git",
@@ -34,11 +38,11 @@
     "eslint-plugin-prettier": "^3.0.0",
     "eslint-plugin-react": "^7.11.0",
     "jest": "^23.6.0",
-    "jest-styled-components": "^6.3.1",
+    "jest-dom": "^3.0.0",
     "prettier": "^1.15.3",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
-    "react-test-renderer": "^16.6.3",
+    "react-testing-library": "^5.4.0",
     "styled-components": "^4.1.2",
     "styled-system": "^3.1.11"
   }
