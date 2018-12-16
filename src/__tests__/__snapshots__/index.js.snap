@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`styled-grids should match the snapshot 1`] = `
+.c0 {
+  background-color: green;
+}
+
+<div
+  className="c0"
+/>
+`;

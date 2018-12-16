@@ -1,0 +1,45 @@
+{
+  "name": "styled-grids",
+  "version": "1.0.0",
+  "description": "Styled Component Grids using Styled-System",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel src -d dist",
+    "watch": "babel src -d dist -w",
+    "test": "jest"
+  },
+  "repository": "git@github.com:WebSeed/styled-grids.git",
+  "author": "WebSeed <w.bamford@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "peerDependencies": {
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "styled-components": "^4.0.0",
+    "styled-system": "^3.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.0",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-core": "^7.0.0-bridge",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
+    "eslint": "^5.3.0",
+    "eslint-config-airbnb": "17.1.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-prettier": "^3.0.0",
+    "eslint-plugin-react": "^7.11.0",
+    "jest": "^23.6.0",
+    "jest-styled-components": "^6.3.1",
+    "prettier": "^1.15.3",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-test-renderer": "^16.6.3",
+    "styled-components": "^4.1.2",
+    "styled-system": "^3.1.11"
+  }
+}
