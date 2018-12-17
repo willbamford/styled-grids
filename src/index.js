@@ -1,86 +1,99 @@
-// // import React from 'react'
-// import { createMediaQuery, px } from 'styled-system'
+import { createMediaQuery, px, isObject, isArray, num } from 'styled-system'
 import styled from 'styled-components'
 
-// // // Move to primitives / system folder?
-// // // const applyMinMediaQueryCssAtBreakpoints = (breakpoints, apply) =>
-// // //   Object.keys(breakpoints)
-// // //     .map(bp => {
-// // //       const value = breakpoints[bp]
-// // //       if (value === undefined) {
-// // //         // eslint-disable-next-line no-console
-// // //         console.warn(`Warning: breakpoint '${bp}' does not exist`)
-// // //         return ''
-// // //       }
-// // //       return bp === DEFAULT
-// // //         ? apply(bp)
-// // //         : `
-// // //             ${createMediaQuery(value)} {
-// // //               ${apply(bp)}
-// // //             }
-// // //           `
-// // //     })
-// // //     .join('')
+// nb. loosely based on styled-system equivalent
+const getValue = (n, scaling) => {
+  if (!num(n)) {
+    return px(scaling[n] || n)
+  }
+  const value = scaling[n]
+  if (!num(value)) {
+    return value
+  }
+  return value === 0 ? 0 : px(value)
+}
 
-// // // const gapBreakpoints = (gap, breakpoints) =>
-// // //   Object.keys(gap).reduce(
-// // //     (prev, curr) => ({ ...prev, ...{ [curr]: breakpoints[curr] } }),
-// // //     {},
-// // //   )
+// nb. also loosely based on styled-system `getStyles`
+// see: https://github.com/jxnblk/styled-system/pull/341
+const createCss = ({ breakpoints, spacing }, value, cssFn) => {
+  const css = v => cssFn(getValue(v, spacing))
+
+  // Scalar
+  if (!isObject(value)) {
+    return css(value)
+  }
+
+  // Arrays
+  if (isArray(value) && isArray(breakpoints)) {
+    let out = css(value[0])
+    for (let i = 1; i < value.length; i += 1) {
+      const rule = css(value[i])
+      if (rule) {
+        const mediaQuery = createMediaQuery(breakpoints[i - 1])
+        out += `${mediaQuery} { ${rule} }\n`
+      }
+    }
+    return out
+  }
+
+  // Objects
+  let out = ''
+  // eslint-disable-next-line guard-for-in, no-restricted-syntax
+  for (const breakpoint in value) {
+    const minWidth = breakpoints[breakpoint]
+    if (!minWidth) {
+      out += css(value[breakpoint])
+    } else {
+      const rule = css(value[breakpoint])
+      const mediaQuery = createMediaQuery(minWidth)
+      out += `${mediaQuery} { ${rule} }\n`
+    }
+  }
+  return out
+}
 
 const cssForGap = value => `
-  margin: -${value}px;
+  margin: -${value};
   > * {
-    padding: ${value}px;
+    padding: ${value};
   }
 `
 
 const cssForRowGap = value => `
-  margin-top: -${value}px;
-  margin-bottom: -${value}px;
+  margin-top: -${value};
+  margin-bottom: -${value};
   > * {
-    padding-top: ${value}px;
-    padding-bottom: ${value}px;
+    padding-top: ${value};
+    padding-bottom: ${value};
   }
 `
 
 const cssForColGap = value => `
-  margin-left: -${value}px;
-  margin-right: -${value}px;
+  margin-left: -${value};
+  margin-right: -${value};
   > * {
-    padding-left: ${value}px;
-    padding-right: ${value}px;
+    padding-left: ${value};
+    padding-right: ${value};
   }
 `
 
-const applyGridGap = ({ breakpoints, spacing }, gap, cssForGapFn) => {
-  if (gap === undefined) {
-    return undefined
-  }
-  // if (typeof gap === 'object') {
-  //   return applyMinMediaQueryCssAtBreakpoints(
-  //     gapBreakpoints(gap, breakpoints),
-  //     breakpoint => cssForGapFn(spacing[gap[breakpoint]]),
-  //   )
-  // }
-  return cssForGapFn(spacing[gap])
+export const gridGap = props => createCss(props.theme, props.gap, cssForGap)
+
+export const gridRowGap = props =>
+  createCss(props.theme, props.rowGap, cssForRowGap)
+
+export const gridColGap = props =>
+  createCss(props.theme, props.colGap, cssForColGap)
+
+export const gridGaps = props => {
+  if (props.gap !== undefined) return gridGap(props)
+  if (props.rowGap !== undefined) return gridRowGap(props)
+  if (props.colGap !== undefined) return gridColGap(props)
+  return undefined
 }
 
-const gridGap = props => applyGridGap(props.theme, props.gap, cssForGap)
-
-const gridRowGap = props =>
-  applyGridGap(props.theme, props.rowGap, cssForRowGap)
-
-const gridColGap = props =>
-  applyGridGap(props.theme, props.colGap, cssForColGap)
-
 const Grid = styled.div`
-  background-color: pink;
-  ${gridGap};
-  ${gridRowGap};
-  ${gridColGap};
+  ${gridGaps};
 `
-
-// const Grid = 'fo'
 
 export default Grid
